@@ -13,6 +13,13 @@ export interface OrderData {
   QA: Order[],
 }
 
+export interface Product {
+  ProductID: number;
+  ProductName: string;
+  ProductPhotoURL: string;
+  ProductStatus: "Active" | "InActive";
+}
+
 export interface DraggableItemProps extends Order{
     draggableProvided: DraggableProvided;
     removeOrder: (order: Order) => void;

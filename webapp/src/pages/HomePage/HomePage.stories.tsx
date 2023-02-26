@@ -5,9 +5,20 @@ import HomePage from "./HomePage";
 import { INPIPELINE_URL, UPDATE_STATUS_URL } from "../ApiHelper";
 
 export default {
-    title: 'Home Page',
-    component: HomePage,
-    decorators : [(Story) => (<MemoryRouter><Story/></MemoryRouter>)]
+  title: "Home Page",
+  component: HomePage,
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
+  parameters: {
+    backgrounds: {
+      default: "black",
+    },
+  },
 } as ComponentMeta<typeof HomePage>;
 
 const Template: ComponentStory<typeof HomePage> = () => <HomePage />;
