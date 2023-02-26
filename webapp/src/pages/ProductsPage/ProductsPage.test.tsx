@@ -16,15 +16,18 @@ describe("ProductsPage", () => {
   });
   it("shouldDisplayProductsContainer", async () => {
     // set up mock for axios.get
-    const response = [
-      {
-        ProductID: 1,
-        ProductName: "Hat",
-        ProductPhotoURL:
-          "https://images.pexels.com/photos/7679679/pexels-photo-7679679.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        ProductStatus: "Active",
-      },
-    ];
+    const response = {
+      data: [
+        {
+          ProductID: 1,
+          ProductName: "Hat",
+          ProductPhotoURL:
+            "https://images.pexels.com/photos/7679679/pexels-photo-7679679.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          ProductStatus: "Active",
+        },
+      ],
+      message: "",
+    };
     const server = setupServer(
       rest.get(PRODUCTS_URL, (req, res, ctx) => {
         return res(ctx.status(200), ctx.json(response));
@@ -46,7 +49,10 @@ describe("ProductsPage", () => {
       rest.get(PRODUCTS_URL, (req, res, ctx) => {
         return res(
           ctx.status(500),
-          ctx.text("There was an error retrieving the products.")
+          ctx.json({
+            data: [],
+            message: "There was an error retrieving the products.",
+          })
         );
       })
     );
