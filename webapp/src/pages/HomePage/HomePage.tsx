@@ -55,9 +55,10 @@ const HomePage = () => {
     setLoadingState(DATA_STATES.loaded);
   };
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = async (result: any) => {
     const { source, destination } = result;
     if (!destination) return;
+    setLoadingState(DATA_STATES.waiting);
     const sourceKey = ID_LIST_MAP[
       source.droppableId as keyof IdList
     ] as keyof OrderData;
@@ -68,15 +69,20 @@ const HomePage = () => {
     ] as keyof OrderData;
     const destIndex = destination.index;
 
+    const sourceClone = Array.from(data[sourceKey]);
+    const [removed] = sourceClone.splice(sourceIndex, 1);
+
+    const orderStatusUpdated = await updateOrderStatus(removed, destKey);
+    if (!orderStatusUpdated) {
+      setLoadingState(DATA_STATES.error);
+      return;
+    }
+
     if (sourceKey === destKey) {
-      const sourceClone = Array.from(data[sourceKey]);
-      const [removed] = sourceClone.splice(sourceIndex, 1);
       sourceClone.splice(destIndex, 0, removed);
       setData({ ...data, [sourceKey]: sourceClone });
     } else {
-      const sourceClone = Array.from(data[sourceKey]);
       const destClone = Array.from(data[destKey]);
-      const [removed] = sourceClone.splice(sourceIndex, 1);
       destClone.splice(destIndex, 0, removed);
       destClone[destIndex].OrderStatus = destKey;
       setData({
@@ -85,6 +91,7 @@ const HomePage = () => {
         [destKey]: destClone,
       });
     }
+    setLoadingState(DATA_STATES.loaded);
   };
 
   useEffect(() => {
